@@ -1,10 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
 
-for %%m in (10 11 12) do (
+for %%m in (07 08 09) do (
 
     REM Correct days per month
-    if %%m==11 (
+    if %%m==09 (
         set max=30
     ) else (
         set max=31
