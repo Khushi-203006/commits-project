@@ -1,13 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
-for %%m in (04 05 06) do (
+for %%m in (10 11 12) do (
 
     REM Correct days per month
-    if %%m==05 (
-        set max=31
-    ) else (
+    if %%m==11 (
         set max=30
+    ) else (
+        set max=31
     )
 
     for /L %%d in (1,1,!max!) do (
