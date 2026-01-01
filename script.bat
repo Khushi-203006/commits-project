@@ -1,13 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
-for /L %%d in (1,1,28) do (
-  set /a skip=!random! %% 3
+for /L %%d in (1,1,20) do (
+  set /a skip=!random! %% 4
 
   if !skip!==0 (
     echo Skipping Day %%d
   ) else (
-    set /a commits=!random! %% 7 + 1
+    set /a commits=!random! %% 3 + 1
 
     for /L %%i in (1,1,!commits!) do (
       echo Commit %%d-%%i >> file.txt
