@@ -1,35 +1,30 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set skipped=0
+for /L %%d in (1,1,90) do (
 
-for %%m in (01 02 03) do (
-  for /L %%d in (1,1,28) do (
+    REM Decide if this day is skipped (approx 6-7 skip days total)
+    set /a skip=!random! %% 15
 
-    rem Allow only 6 skipped days total
-    if !skipped! LSS 6 (
-      set /a skip=!random! %% 10
+    if !skip! == 0 (
+        echo Skipping Day %%d
     ) else (
-      set skip=1
+
+        REM Random commits between 1 and 10
+        set /a commits=!random! %% 10 + 1
+
+        echo Day %%d → !commits! commits
+
+        for /L %%i in (1,1,!commits!) do (
+            echo Commit %%d-%%i >> file.txt
+            git add .
+
+            set GIT_AUTHOR_DATE=2026-01-%%dT12:%%i:00
+            set GIT_COMMITTER_DATE=2026-01-%%dT12:%%i:00
+
+            git commit -m "Day %%d Commit %%i"
+        )
     )
-
-    if !skip!==0 (
-      echo Skipping 2026-%%m-%%d
-      set /a skipped+=1
-    ) else (
-      set /a commits=!random! %% 3 + 1
-
-      for /L %%i in (1,1,!commits!) do (
-        echo Commit %%m-%%d-%%i >> file.txt
-        git add .
-        set GIT_AUTHOR_DATE=2026-%%m-%%dT12:%%i:00
-        set GIT_COMMITTER_DATE=2026-%%m-%%dT12:%%i:00
-        git commit -m "Commit on 2026-%%m-%%d"
-      )
-    )
-
-  )
 )
 
-echo DONE!
-pause
+endlocal
