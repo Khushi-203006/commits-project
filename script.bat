@@ -1,28 +1,39 @@
 @echo off
 setlocal enabledelayedexpansion
 
-for /L %%d in (1,1,90) do (
+REM Loop for 3 months
+for %%m in (01 02 03) do (
 
-    REM Decide if this day is skipped (approx 6-7 skip days total)
-    set /a skip=!random! %% 15
+    REM Days per month (simplified)
+    if %%m==02 (set max=28) else (set max=31)
 
-    if !skip! == 0 (
-        echo Skipping Day %%d
-    ) else (
+    for /L %%d in (1,1,!max!) do (
 
-        REM Random commits between 1 and 10
-        set /a commits=!random! %% 10 + 1
+        REM Skip logic (~few days skipped)
+        set /a skip=!random! %% 15
 
-        echo Day %%d → !commits! commits
+        if !skip! == 0 (
+            echo Skipping %%m-%%d
+        ) else (
 
-        for /L %%i in (1,1,!commits!) do (
-            echo Commit %%d-%%i >> file.txt
-            git add .
+            REM Random commits (1–10)
+            set /a commits=!random! %% 10 + 1
 
-            set GIT_AUTHOR_DATE=2026-01-%%dT12:%%i:00
-            set GIT_COMMITTER_DATE=2026-01-%%dT12:%%i:00
+            echo %%m-%%d → !commits! commits
 
-            git commit -m "Day %%d Commit %%i"
+            for /L %%i in (1,1,!commits!) do (
+                echo Commit %%m-%%d-%%i >> file.txt
+                git add .
+
+                REM IMPORTANT: Proper date format with leading zero
+                set day=%%d
+                if %%d LSS 10 set day=0%%d
+
+                set GIT_AUTHOR_DATE=2026-%%m-!day!T12:%%i:00
+                set GIT_COMMITTER_DATE=2026-%%m-!day!T12:%%i:00
+
+                git commit -m "Day %%m-!day! Commit %%i"
+            )
         )
     )
 )
